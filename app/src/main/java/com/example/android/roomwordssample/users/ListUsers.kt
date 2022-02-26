@@ -64,7 +64,7 @@ class ListUsers : AppCompatActivity(), NextListener, ShowDetail {
 
     override fun onTap(user: User) {
         val intent = Intent(this, UserDetail::class.java)
-        intent.putExtra("user", user.id)
+        intent.putExtra("user", user)
         startActivity(intent)
     }
 }

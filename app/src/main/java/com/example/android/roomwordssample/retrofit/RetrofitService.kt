@@ -15,7 +15,7 @@ interface RetrofitService {
     @GET("users")
     suspend fun getUsers(@Query("page", encoded = true) page: String): ResponseUsers
 
-    @GET("user/{id}")
+    @GET("users/{id}")
     suspend fun getUser(@Path("id") id: String): ResponseUser
 
     companion object {

@@ -7,6 +7,7 @@ import com.example.android.roomwordssample.databinding.ActivityListUsersBinding
 import com.example.android.roomwordssample.databinding.ActivityUserDetailBinding
 import com.example.android.roomwordssample.retrofit.RetrofitService
 import com.example.android.roomwordssample.retrofit.model.ResponseUser
+import com.example.android.roomwordssample.retrofit.model.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,12 +24,16 @@ class UserDetail : AppCompatActivity() {
     }
 
     private fun getData() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val response = RetrofitService.getInstance().getUser(intent.extras!!.getString("user","1"))
-            withContext(Dispatchers.Main) {
+        val user: User? = intent.getParcelableExtra<User>("user")
+        if (user != null) {
+            val id = user.id
+            CoroutineScope(Dispatchers.IO).launch {
+                val response = RetrofitService.getInstance().getUser(id.toString())
+                withContext(Dispatchers.Main) {
 
-                validateResponse(response)
+                    validateResponse(response)
 
+                }
             }
         }
     }
