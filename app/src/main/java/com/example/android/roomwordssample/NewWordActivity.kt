@@ -20,9 +20,10 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
-import android.widget.Button
-import android.widget.EditText
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
+
 
 /**
  * Activity for entering a word.
@@ -36,6 +37,18 @@ class NewWordActivity : AppCompatActivity() {
         val editWordView = findViewById<EditText>(R.id.edit_word)
 
         val button = findViewById<Button>(R.id.button_save)
+        val country: ArrayList<String> = ArrayList()
+        country.add("MEXICO")
+        country.add("EU")
+        country.add("OTRO")
+
+        findViewById<Button>(R.id.button_save)
+        val countryAdapter: ArrayAdapter<String> = ArrayAdapter<String>(
+            this,
+            android.R.layout.simple_spinner_item, country)
+        countryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val spinner = findViewById<Spinner>(R.id.sp_country)
+        spinner.adapter = countryAdapter
         button.setOnClickListener {
             val replyIntent = Intent()
             if (TextUtils.isEmpty(editWordView.text)) {
@@ -43,13 +56,18 @@ class NewWordActivity : AppCompatActivity() {
             } else {
                 val word = editWordView.text.toString()
                 replyIntent.putExtra(EXTRA_REPLY, word)
+                replyIntent.putExtra(EXTRA_COUNTRY, spinner.selectedItem.toString())
+                replyIntent.putExtra(EXTRA_MANDATORY, findViewById<SwitchCompat>(R.id.switch_mandatory).isChecked)
                 setResult(Activity.RESULT_OK, replyIntent)
             }
             finish()
         }
+
     }
 
     companion object {
         const val EXTRA_REPLY = "com.example.android.wordlistsql.REPLY"
+        const val EXTRA_COUNTRY = "com.example.android.wordlistsql.COUNTRY"
+        const val EXTRA_MANDATORY = "com.example.android.wordlistsql.MANDATORY"
     }
 }

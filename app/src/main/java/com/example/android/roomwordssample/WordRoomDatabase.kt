@@ -17,19 +17,28 @@
 package com.example.android.roomwordssample
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.sql.Date
+import java.util.*
+
 
 /**
  * This is the backend. The database. This used to be done by the OpenHelper.
  * The fact that this has very few comments emphasizes its coolness.
  */
-@Database(entities = [Word::class], version = 1)
+@Database(
+    version = 2,
+    entities = [Word::class],
+    exportSchema = false
+)
 abstract class WordRoomDatabase : RoomDatabase() {
 
     abstract fun wordDao(): WordDao
@@ -38,6 +47,22 @@ abstract class WordRoomDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: WordRoomDatabase? = null
 
+        private val MIGRATION_1_2: Migration = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL(
+                    "ALTER TABLE word_table "
+                            + " ADD COLUMN date TEXT"
+                )
+                database.execSQL(
+                    "ALTER TABLE word_table "
+                            + " ADD COLUMN country TEXT"
+                )
+                database.execSQL(
+                    "ALTER TABLE word_table "
+                            + " ADD COLUMN mandatory INTEGER"
+                )
+            }
+        }
         fun getDatabase(
             context: Context,
             scope: CoroutineScope
@@ -49,10 +74,9 @@ abstract class WordRoomDatabase : RoomDatabase() {
                     context.applicationContext,
                     WordRoomDatabase::class.java,
                     "word_database"
-                )
+                ).addMigrations(MIGRATION_1_2)
                     // Wipes and rebuilds instead of migrating if no Migration object.
                     // Migration is not part of this codelab.
-                    .fallbackToDestructiveMigration()
                     .addCallback(WordDatabaseCallback(scope))
                     .build()
                 INSTANCE = instance
@@ -87,10 +111,12 @@ abstract class WordRoomDatabase : RoomDatabase() {
             // Start the app with a clean database every time.
             // Not needed if you only populate on creation.
             wordDao.deleteAll()
-
-            var word = Word("Hello")
+            val cal = Calendar.getInstance()
+            val date: Date = Date(cal.timeInMillis)
+            val country = "OTRO"
+            var word = Word("Hello", date.toString(), country, 0)
             wordDao.insert(word)
-            word = Word("World!")
+            word = Word("Word!", date.toString(), country, 0)
             wordDao.insert(word)
         }
     }

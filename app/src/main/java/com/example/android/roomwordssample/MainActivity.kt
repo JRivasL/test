@@ -25,7 +25,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.android.roomwordssample.users.ListUsers
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.sql.Date
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -49,7 +52,13 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(intent, newWordActivityRequestCode)
         }
 
-        
+        val users = findViewById<FloatingActionButton>(R.id.users)
+        users.setOnClickListener {
+            val intent = Intent(this@MainActivity, ListUsers::class.java)
+            startActivity(intent)
+        }
+
+
         // Add an observer on the LiveData returned by getAlphabetizedWords.
         // The onChanged() method fires when the observed data changes and the activity is
         // in the foreground.
@@ -63,9 +72,21 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, intentData)
 
         if (requestCode == newWordActivityRequestCode && resultCode == Activity.RESULT_OK) {
-            intentData?.getStringExtra(NewWordActivity.EXTRA_REPLY)?.let { reply ->
-                val word = Word(reply)
-                wordViewModel.insert(word)
+            val cal = Calendar.getInstance()
+            val date: Date = Date(cal.timeInMillis)
+            val wordString = intentData?.getStringExtra(NewWordActivity.EXTRA_REPLY)
+            val country = intentData?.getStringExtra(NewWordActivity.EXTRA_COUNTRY)
+            val mandatory:Boolean? = intentData?.getBooleanExtra(NewWordActivity.EXTRA_MANDATORY, false)
+            wordString?.let { wordStr ->
+                country?.let { country ->
+                    mandatory?.let { mandatory ->
+                        val word = Word(
+                            wordStr, date.toString(), country,
+                            mandatory.toInt()
+                        )
+                        wordViewModel.insert(word)
+                    }
+                }
             }
         } else {
             Toast.makeText(
@@ -76,3 +97,5 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+
+fun Boolean.toInt() = if (this) 1 else 0

@@ -16,12 +16,37 @@ limitations under the License. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
+    android:layout_marginBottom="@dimen/dp_8"
     android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/textView"
         style="@style/word_title"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_orange_light" />
+
+    <TextView
+        android:id="@+id/country"
+        style="@style/word_title"
+        android:layout_width="match_parent"
+        android:text="@string/empty"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_orange_light" />
+
+    <TextView
+        android:id="@+id/date"
+        style="@style/word_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/empty"
+        android:background="@android:color/holo_orange_light" />
+
+    <TextView
+        android:id="@+id/mandatory"
+        style="@style/word_title"
+        android:layout_width="match_parent"
+        android:text="@string/empty"
         android:layout_height="wrap_content"
         android:background="@android:color/holo_orange_light" />
 </LinearLayout>

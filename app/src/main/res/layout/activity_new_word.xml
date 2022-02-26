@@ -19,7 +19,7 @@ limitations under the License. -->
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
+    <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/edit_word"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,6 +29,21 @@ limitations under the License. -->
         android:inputType="textAutoComplete"
         android:layout_margin="@dimen/big_padding"
         android:textSize="18sp" />
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:layout_width="match_parent"
+        android:minHeight="@dimen/min_height"
+        android:id="@+id/sp_country"
+        android:layout_margin="@dimen/big_padding"
+        android:layout_height="wrap_content"/>
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:id="@+id/switch_mandatory"
+        android:layout_margin="@dimen/big_padding"
+        android:text="@string/mandatory"/>
 
     <Button
         android:id="@+id/button_save"

@@ -16,6 +16,7 @@
 
 package com.example.android.roomwordssample
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,14 +34,37 @@ class WordListAdapter : ListAdapter<Word, WordViewHolder>(WORDS_COMPARATOR) {
 
     override fun onBindViewHolder(holder: WordViewHolder, position: Int) {
         val current = getItem(position)
-        holder.bind(current.word)
+        holder.bind(current)
     }
 
     class WordViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val wordItemView: TextView = itemView.findViewById(R.id.textView)
+        private val country: TextView = itemView.findViewById(R.id.country)
+        private val date: TextView = itemView.findViewById(R.id.date)
+        private val mandatory: TextView = itemView.findViewById(R.id.mandatory)
 
-        fun bind(text: String?) {
-            wordItemView.text = text
+        @SuppressLint("SetTextI18n")
+        fun bind(text: Word) {
+            text.word.let {
+                wordItemView.text = "word: $it"
+            }
+
+            text.country.let {
+                country.text = "country: " + (text.country ?: "-")
+            }
+
+            text.date.let {
+                date.text = "date: " + (text.date ?: "-")
+            }
+
+            text.mandatory.let {
+                mandatory.text = "mandatory: " + if (text.mandatory == 0)
+                    "false"
+                else if (text.mandatory == 1)
+                    "true"
+                else "-"
+            }
+
         }
 
         companion object {
